@@ -27,7 +27,7 @@ jobs:
         run: |
           set -x
           echo ${{  github.event.pusher.name  }}
-          pip install bump2version twine
+          pip install bump2version wheel setuptools twine
           git config --global user.name "${{ github.event.pusher.name }}"
           git config --global user.email "${{ github.event.pusher.email }}"
           git config --global pull.rebase false
