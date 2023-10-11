@@ -30,15 +30,17 @@ jobs:
 
       - name: setup bump
         run: |
-          set -x
-          echo ${{  github.event.pusher.name  }}
           pip install bump2version wheel setuptools twine
           git config --global user.name "${{ github.event.pusher.name }}"
           git config --global user.email "${{ github.event.pusher.email }}"
           git config --global pull.rebase false
 
       - name: Increment version
-        run: bump2version --no-commit patch # or 'minor' or 'major'
+        run: |
+        git config --global user.name "${{ github.event.pusher.name }}"
+        git config --global user.email "${{ github.event.pusher.email }}"
+        git config --global pull.rebase false
+        bump2version --no-commit patch # or 'minor' or 'major'
 
       - name: current_version
         run: echo "current_version=$(python -c 'from wrapconfig import __version__; print(__version__)')" >> $GITHUB_ENV
