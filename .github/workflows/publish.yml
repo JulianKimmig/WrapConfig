@@ -38,10 +38,11 @@ jobs:
           if [[ "${{ github.event_name }}" == 'push' ]]; then
             git config --global user.name "${{ github.event.pusher.name }}"
             git config --global user.email "${{ github.event.pusher.email }}"
-    #      else
-    #        git config --global user.name "Your Default Name"
-    #        git config --global user.email "youremail@example.com"
           fi
+      #      else
+      #        git config --global user.name "Your Default Name"
+      #        git config --global user.email "youremail@example.com"
+      #     fi
 
       - name: setup bump
         run: |
