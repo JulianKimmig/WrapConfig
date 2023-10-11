@@ -21,6 +21,16 @@ class TestWrapConfig(unittest.TestCase):
             self.assertEqual(self.manager._data["key"], "value")
             mock_save.assert_called_once()
 
+    def test_set_withoutvalue(self):
+        self.manager.set("key", "subkey1", "subkey2", "value")
+        self.assertEqual(self.manager._data["key"]["subkey1"]["subkey2"], "value")
+
+        self.manager.set("key", None)
+        self.assertEqual(self.manager._data["key"], None)
+
+        with self.assertRaises(ValueError):
+            self.manager.set("key")
+
     def test_set_with_subkeys(self):
         self.manager.set("key", "subkey1", "subkey2", value="value")
         self.assertEqual(self.manager._data["key"]["subkey1"]["subkey2"], "value")

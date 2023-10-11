@@ -8,6 +8,8 @@ ConfigTypes = Union[str, float, int, bool]
 
 ConfigData = Dict[str, Union[ConfigTypes, "ConfigData"]]
 
+nonetype = object()
+
 
 class WrapConfig(ABC):
     def __init__(self, default_save: bool = True) -> None:
@@ -31,32 +33,35 @@ class WrapConfig(ABC):
 
     def set(
         self,
-        key: str,
-        *subkeys: str,
-        value: ConfigTypes,
+        *keys: str,
+        value: ConfigTypes = nonetype,
         save: Optional[bool] = None,
     ):
         """set config"""
-        if key not in self._data:
-            self._data[key] = {}
+
+        keys = list(keys)
+
+        if value is nonetype:
+            value = keys.pop(-1)
+        if len(keys) == 0:
+            raise ValueError("No keys provided")
 
         _datadict = self._data
-        _key = key
         if not isinstance(_datadict, dict):
             raise TypeError(
                 f"Expected dict, got {type(_datadict)}, this might be the result of a key or subkey conflict, which is already a value."
             )
-        for subkey in subkeys:
-            if subkey not in _datadict[_key]:
-                _datadict[_key][subkey] = {}
+        objectkey = keys.pop(-1)
+        for _key in keys:
+            if _key not in _datadict:
+                _datadict[_key] = {}
             _datadict = _datadict[_key]
-            _key = subkey
             if not isinstance(_datadict, dict):
                 raise TypeError(
                     f"Expected dict, got {type(_datadict)}, this might be the result of a key or subkey conflict, which is already a value."
                 )
 
-        _datadict[_key] = value
+        _datadict[objectkey] = value
         if save is None:
             save = self._default_save
 
