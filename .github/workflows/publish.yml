@@ -62,8 +62,3 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
 
       - uses: stefanzweifel/git-auto-commit-action@v5
-
-      - name: Create GitHub tag
-        run: |
-          git tag v$(python -c "from wrapconfig import __version__; print(__version__)")
-          git push --tags
