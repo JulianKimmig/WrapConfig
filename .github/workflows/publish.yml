@@ -23,10 +23,10 @@ jobs:
       - name: setup bump
         run: |
           set -x
-          echo ${{  github.event.pusher  }}
+          echo ${{  github.event.pusher.name  }}
           pip install bump2version twine
-          git config --global user.name "${{ inputs.commit_name }}"
-          git config --global user.email "${{ inputs.commit_email }}"
+          git config --global user.name "${{ github.event.pusher.name }}"
+          git config --global user.email "${{ github.event.pusher.email }}"
           git config --global pull.rebase false
 
       - name: Increment version
