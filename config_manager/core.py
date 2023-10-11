@@ -131,6 +131,8 @@ class ConfigManager(ABC):
 
 
 class FileConfigManager(ConfigManager):
+    """ConfigManager that saves and loads from a file"""
+
     def __init__(self, path, default_save: bool = True) -> None:
         self._path = path
         super().__init__(default_save)
