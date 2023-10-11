@@ -6,7 +6,7 @@ with open("requirements.txt", "r") as f:
     requirements = f.read().splitlines()
 
 setup(
-    name="config_manager",
+    name="conf_manager",
     version=config_manager.__version__,
     description="Wraper to manage configurations",
     author="Julian Kimmig",
