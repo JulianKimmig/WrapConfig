@@ -18,7 +18,7 @@ setup(
     url="https://github.com/JulianKimmig/WrapConfig",
     # license
     license="MIT",
-    long_description_content_type='text/markdown'
+    long_description_content_type='text/markdown',
     # classifiers
     classifiers=[
         "Development Status :: 3 - Alpha",
