@@ -9,7 +9,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'bump version')"
+    if: "contains(github.event.head_commit.message, 'bump version')"
 
     permissions:
       id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
@@ -22,30 +22,30 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9 # Adjust to your Python version
+     # - name: current_version
+     #   run: echo "current_version=$(python -c 'from wrapconfig import __version__; print(__version__)')" >> $GITHUB_ENV
+
+     # - name: setup bump
+     #   run: |
+     #     set -x
+     #     echo ${{  github.event.pusher.name  }}
+     #     pip install bump2version wheel setuptools twine
+     #     git config --global user.name "${{ github.event.pusher.name }}"
+     #     git config --global user.email "${{ github.event.pusher.email }}"
+     #     git config --global pull.rebase false
+
+     # - name: Increment version
+     #   run: bump2version --no-commit patch # or 'minor' or 'major'
+
       - name: current_version
         run: echo "current_version=$(python -c 'from wrapconfig import __version__; print(__version__)')" >> $GITHUB_ENV
 
-      - name: setup bump
-        run: |
-          set -x
-          echo ${{  github.event.pusher.name  }}
-          pip install bump2version wheel setuptools twine
-          git config --global user.name "${{ github.event.pusher.name }}"
-          git config --global user.email "${{ github.event.pusher.email }}"
-          git config --global pull.rebase false
+    #  - name: Build and upload to PyPI
+    #    run: |
+    #      python setup.py sdist bdist_wheel
 
-      - name: Increment version
-        run: bump2version --no-commit patch # or 'minor' or 'major'
-
-      - name: current_version
-        run: echo "current_version=$(python -c 'from wrapconfig import __version__; print(__version__)')" >> $GITHUB_ENV
-
-      - name: Build and upload to PyPI
-        run: |
-          python setup.py sdist bdist_wheel
-
-      - name: Publish package distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+    #  - name: Publish package distributions to PyPI
+    #    uses: pypa/gh-action-pypi-publish@release/v1
 
       #- name: Create GitHub tag
       #  run: |
