@@ -28,30 +28,31 @@ jobs:
       # - name: current_version
       #   run: echo "current_version=$(python -c 'from wrapconfig import __version__; print(__version__)')" >> $GITHUB_ENV
 
-      # - name: setup bump
-      #   run: |
-      #     set -x
-      #     echo ${{  github.event.pusher.name  }}
-      #     pip install bump2version wheel setuptools twine
-      #     git config --global user.name "${{ github.event.pusher.name }}"
-      #     git config --global user.email "${{ github.event.pusher.email }}"
-      #     git config --global pull.rebase false
+      - name: setup bump
+        run: |
+          set -x
+          echo ${{  github.event.pusher.name  }}
+          pip install bump2version wheel setuptools twine
+          git config --global user.name "${{ github.event.pusher.name }}"
+          git config --global user.email "${{ github.event.pusher.email }}"
+          git config --global pull.rebase false
 
-      # - name: Increment version
-      #   run: bump2version --no-commit patch # or 'minor' or 'major'
+      - name: Increment version
+        run: bump2version --no-commit patch # or 'minor' or 'major'
 
       - name: current_version
         run: echo "current_version=$(python -c 'from wrapconfig import __version__; print(__version__)')" >> $GITHUB_ENV
 
-      #  - name: Build and upload to PyPI
-      #    run: |
-      #      python setup.py sdist bdist_wheel
+      - name: Build and upload to PyPI
+        run: |
+          python setup.py sdist bdist_wheel
 
-      #  - name: Publish package distributions to PyPI
-      #    uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
 
       - name: Create GitHub tag
         run: |
           git tag v$(python -c "from wrapconfig import __version__; print(__version__)")
           git push --tags
-      - uses: stefanzweifel/git-auto-commit-action@v5
