@@ -43,6 +43,7 @@ jobs:
       - name: Increment version
         run: |
           bump2version patch # or 'minor' or 'major'
+          git push --follow-tags
 
       - name: Build and upload to PyPI
         run: |
