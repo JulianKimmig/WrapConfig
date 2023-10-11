@@ -25,13 +25,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9 # Adjust to your Python version
-      # - name: current_version
-      #   run: echo "current_version=$(python -c 'from wrapconfig import __version__; print(__version__)')" >> $GITHUB_ENV
-      - name: Show GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-        shell: bash
 
       - name: Set up Git user name and email
         run: |
@@ -49,10 +42,7 @@ jobs:
 
       - name: Increment version
         run: |
-          bump2version --no-commit patch # or 'minor' or 'major'
-
-      - name: current_version
-        run: echo "current_version=$(python -c 'from wrapconfig import __version__; print(__version__)')" >> $GITHUB_ENV
+          bump2version patch # or 'minor' or 'major'
 
       - name: Build and upload to PyPI
         run: |
@@ -61,4 +51,4 @@ jobs:
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
 
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      #- uses: stefanzweifel/git-auto-commit-action@v5
