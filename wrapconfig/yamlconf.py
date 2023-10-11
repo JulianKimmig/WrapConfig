@@ -1,10 +1,10 @@
 from typing import Optional, Type
 import os
-from .core import FileConfigManager
+from .core import FileWrapConfig
 import yaml
 
 
-class YAMLConfigManager(FileConfigManager):
+class YAMLWrapConfig(FileWrapConfig):
     def save(self):
         if not os.path.exists(self.path):
             os.makedirs(os.path.dirname(self.path), exist_ok=True)

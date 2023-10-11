@@ -2,18 +2,18 @@ import unittest
 from unittest.mock import patch, mock_open
 
 
-class TestConfigManager(unittest.TestCase):
+class TestWrapConfig(unittest.TestCase):
     def setUp(self):
-        from config_manager import ConfigManager
+        from wrapconfig import WrapConfig
 
-        class MockConfigManager(ConfigManager):
+        class MockWrapConfig(WrapConfig):
             def load(self):
                 pass  # No-op implementation
 
             def save(self):
                 pass  # No-op implementation
 
-        self.manager = MockConfigManager()
+        self.manager = MockWrapConfig()
 
     def test_set_and_save(self):
         with patch.object(self.manager, "save") as mock_save:

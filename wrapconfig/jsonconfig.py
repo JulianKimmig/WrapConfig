@@ -1,12 +1,12 @@
 from __future__ import annotations
 from typing import Type, Optional
-from .core import FileConfigManager
+from .core import FileWrapConfig
 
 import json
 import os
 
 
-class JSONConfigManager(FileConfigManager):
+class JSONWrapConfig(FileWrapConfig):
     def __init__(
         self,
         path: str,

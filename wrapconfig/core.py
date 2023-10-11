@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Union, Optional, TypedDict, Dict
+from typing import Any, Union, Optional, Dict
 from copy import deepcopy
 import os
 
@@ -9,7 +9,7 @@ ConfigTypes = Union[str, float, int, bool]
 ConfigData = Dict[str, Union[ConfigTypes, "ConfigData"]]
 
 
-class ConfigManager(ABC):
+class WrapConfig(ABC):
     def __init__(self, default_save: bool = True) -> None:
         super().__init__()
         self._data: ConfigData = {}
@@ -130,8 +130,8 @@ class ConfigManager(ABC):
             self.save()
 
 
-class FileConfigManager(ConfigManager):
-    """ConfigManager that saves and loads from a file"""
+class FileWrapConfig(WrapConfig):
+    """WrapConfig that saves and loads from a file"""
 
     def __init__(self, path, default_save: bool = True) -> None:
         self._path = path

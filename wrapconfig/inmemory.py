@@ -1,7 +1,7 @@
-from .core import ConfigManager
+from .core import WrapConfig
 
 
-class InMemoryConfig(ConfigManager):
+class InMemoryConfig(WrapConfig):
     def __init__(self, *args, **kwargs) -> None:
         self._backup = {}
         super().__init__(*args, **kwargs)

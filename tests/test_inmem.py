@@ -3,7 +3,7 @@ import unittest
 
 class TestInMemoryConfig(unittest.TestCase):
     def setUp(self):
-        from config_manager import InMemoryConfig
+        from wrapconfig import InMemoryConfig
 
         self.manager = InMemoryConfig()
 
