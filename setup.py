@@ -11,7 +11,7 @@ setup(
     packages=["wrapconfig"],  # Update with your package name
     install_requires=["pyyaml"],
     # github
-    url="https://github.com/JulianKimmig/wrapconfig",
+    url="https://github.com/JulianKimmig/WrapConfig",
     # license
     license="MIT",
     # classifiers
