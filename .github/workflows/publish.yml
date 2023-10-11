@@ -13,7 +13,9 @@ jobs:
 
     permissions:
       id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
-      permissions: write-all
+      pull-requests: write
+      contents: write
+      repository-projects: write
 
     steps:
       - name: Checkout code
