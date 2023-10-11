@@ -1,7 +1,7 @@
 name: Publish to PyPI and GitHub
 
-#on:
-#  push:
+on:
+  push:
 #    branches:
 #      - main
 
@@ -20,15 +20,14 @@ jobs:
       - name: current_version
         run: echo "current_version=$(python -c 'from yourpackage import __version__; print(__version__)')" >> $GITHUB_ENV
 
-
       - name: setup bump
-        run:  |
-        set -x
-        echo ${{  github.event.pusher  }}
-        pip install bump2version twine
-        git config --global user.name "${{ inputs.commit_name }}"
-        git config --global user.email "${{ inputs.commit_email }}"
-        git config --global pull.rebase false
+        run: |
+          set -x
+          echo ${{  github.event.pusher  }}
+          pip install bump2version twine
+          git config --global user.name "${{ inputs.commit_name }}"
+          git config --global user.email "${{ inputs.commit_email }}"
+          git config --global pull.rebase false
 
       - name: Increment version
         run: bump2version patch # or 'minor' or 'major'
