@@ -1,4 +1,4 @@
-name: Publish to PyPI and GitHub
+name: Create new patch release
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    if: '!contains(github.event.head_commit.message , "Bump version")'
 
     permissions:
       id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
@@ -34,7 +35,7 @@ jobs:
           git config --global pull.rebase false
 
       - name: Increment version
-        run: bump2version patch # or 'minor' or 'major'
+        run: bump2version --no-commit patch # or 'minor' or 'major'
 
       - name: current_version
         run: echo "current_version=$(python -c 'from wrapconfig import __version__; print(__version__)')" >> $GITHUB_ENV
@@ -46,9 +47,10 @@ jobs:
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
 
-      - name: Create GitHub tag
-        run: |
-          git tag v$(python -c "from wrapconfig import __version__; print(__version__)")
-          git push --tags
+      #- name: Create GitHub tag
+      #  run: |
+      #    git tag v$(python -c "from wrapconfig import __version__; print(__version__)")
+      #    git push --tags
+      - uses: stefanzweifel/git-auto-commit-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
