@@ -2,8 +2,9 @@ name: Publish to PyPI and GitHub
 
 on:
   push:
-#    branches:
-#      - main
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   publish:
