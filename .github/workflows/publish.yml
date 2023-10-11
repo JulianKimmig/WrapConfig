@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: 3.9 # Adjust to your Python version
       - name: current_version
-        run: echo "current_version=$(python -c 'from yourpackage import __version__; print(__version__)')" >> $GITHUB_ENV
+        run: echo "current_version=$(python -c 'from config_manager import __version__; print(__version__)')" >> $GITHUB_ENV
 
       - name: setup bump
         run: |
@@ -32,6 +32,9 @@ jobs:
       - name: Increment version
         run: bump2version patch # or 'minor' or 'major'
 
+      - name: current_version
+        run: echo "current_version=$(python -c 'from config_manager import __version__; print(__version__)')" >> $GITHUB_ENV
+
       - name: Build and upload to PyPI
         run: |
           python setup.py sdist bdist_wheel
@@ -42,7 +45,7 @@ jobs:
 
       - name: Create GitHub tag
         run: |
-          git tag v$(python -c "from yourpackage import __version__; print(__version__)")
+          git tag v$(python -c "from config_manager import __version__; print(__version__)")
           git push --tags
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
