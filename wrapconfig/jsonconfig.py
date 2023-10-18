@@ -21,7 +21,7 @@ class JSONWrapConfig(FileWrapConfig):
 
     def load(self):
         with open(self.path, "r") as f:
-            self._data = json.load(f, cls=self._decoder)
+            self.set_data(json.load(f, cls=self._decoder))
 
     def save(self):
         if not os.path.exists(self.path):

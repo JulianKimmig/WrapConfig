@@ -1,5 +1,5 @@
 from .jsonconfig import JSONWrapConfig
-from .core import WrapConfig, FileWrapConfig
+from .core import WrapConfig, FileWrapConfig, ValueToSectionError, ExpectingSectionError
 from .inmemory import InMemoryConfig
 
 __all__ = [
@@ -7,6 +7,8 @@ __all__ = [
     "WrapConfig",
     "InMemoryConfig",
     "FileWrapConfig",
+    "ValueToSectionError",
+    "ExpectingSectionError",
 ]
 
 # YAML support is optional

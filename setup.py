@@ -2,6 +2,7 @@ from setuptools import setup
 import wrapconfig
 
 from pathlib import Path
+
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
@@ -18,7 +19,7 @@ setup(
     url="https://github.com/JulianKimmig/WrapConfig",
     # license
     license="MIT",
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     # classifiers
     classifiers=[
         "Development Status :: 3 - Alpha",

@@ -13,7 +13,7 @@ class TestInMemoryConfig(unittest.TestCase):
 
     def test_save(self):
         """Test that the save method backs up data correctly."""
-        self.manager._data = {"key": "value"}
+        self.manager.update({"key": "value"})
         self.manager.save()
         self.assertEqual(self.manager._backup, {"key": "value"})
 
@@ -24,9 +24,10 @@ class TestInMemoryConfig(unittest.TestCase):
 
     def test_load_with_previous_save(self):
         """Test that loading restores data from backup."""
-        self.manager._data = {"key": "value"}
+        self.manager.update({"key": "value"})
         self.manager.save()
-        self.manager._data = {}
+        self.manager.clear()
+        self.assertEqual(self.manager._data, {})
         self.manager.load()
         self.assertEqual(self.manager._data, {"key": "value"})
 
@@ -40,7 +41,7 @@ class TestInMemoryConfig(unittest.TestCase):
         """Test that loading after setting a value and saving restores data correctly."""
         self.manager.set("key", value="value")
         self.manager.save()
-        self.manager._data = {}
+        self.manager.clear()
         self.manager.load()
         self.assertEqual(self.manager._data, {"key": "value"})
 

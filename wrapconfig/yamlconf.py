@@ -6,7 +6,7 @@ import yaml
 
 class YAMLWrapConfig(FileWrapConfig):
     def save(self):
-        if not os.path.exists(self.path):
+        if not os.path.exists(os.path.dirname(self.path)):
             os.makedirs(os.path.dirname(self.path), exist_ok=True)
 
         dump = yaml.dump(self._data)
@@ -15,4 +15,4 @@ class YAMLWrapConfig(FileWrapConfig):
 
     def load(self):
         with open(self.path, "r") as f:
-            self._data = yaml.safe_load(f)
+            self.set_data(yaml.safe_load(f))

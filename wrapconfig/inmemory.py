@@ -10,4 +10,4 @@ class InMemoryConfig(WrapConfig):
         self._backup = self.data
 
     def load(self):
-        self._data = self._backup
+        self.set_data(self._backup)

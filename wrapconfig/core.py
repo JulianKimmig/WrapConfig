@@ -11,15 +11,31 @@ ConfigData = Dict[str, Union[ConfigTypes, "ConfigData"]]
 nonetype = object()
 
 
+class ValueToSectionError(Exception):
+    """Exception raised when trying to overwrite a section with a value."""
+
+
+class ExpectingSectionError(Exception):
+    """Exception raised expectin a section, but got something else."""
+
+
 class WrapConfig(ABC):
     def __init__(self, default_save: bool = True) -> None:
         super().__init__()
-        self._data: ConfigData = {}
+        self._truedata: ConfigData = {}
         self._default_save = default_save
 
     @property
     def data(self) -> ConfigData:
         return deepcopy(self._data)
+
+    @property
+    def _data(self) -> ConfigData:
+        return self._truedata
+
+    def set_data(self, data: ConfigData):
+        self.clear()
+        self.update(data)
 
     @abstractmethod
     def load(self):
@@ -30,6 +46,28 @@ class WrapConfig(ABC):
     def save(self):
         """save config to resource"""
         ...
+
+    def clear(self, *keys):
+        """clear config"""
+        _datadict = self._data
+        if len(keys) == 0:
+            for key in list(self._data.keys()):
+                del self._data[key]
+            return
+
+        keys = list(keys)
+        lastkey = keys[-1]
+        keys = keys[:-1]
+
+        for key in keys:
+            if key not in _datadict:
+                raise KeyError(f"Key {key} not found in config.")
+            _datadict = _datadict[key]
+
+        if lastkey not in _datadict:
+            raise KeyError(f"Key {lastkey} not found in config.")
+
+        del _datadict[lastkey]
 
     def set(
         self,
@@ -47,20 +85,21 @@ class WrapConfig(ABC):
             raise ValueError("No keys provided")
 
         _datadict = self._data
-        if not isinstance(_datadict, dict):
-            raise TypeError(
-                f"Expected dict, got {type(_datadict)}, this might be the result of a key or subkey conflict, which is already a value."
-            )
+
         objectkey = keys.pop(-1)
         for _key in keys:
             if _key not in _datadict:
                 _datadict[_key] = {}
             _datadict = _datadict[_key]
             if not isinstance(_datadict, dict):
-                raise TypeError(
+                raise ExpectingSectionError(
                     f"Expected dict, got {type(_datadict)}, this might be the result of a key or subkey conflict, which is already a value."
                 )
 
+        if objectkey in _datadict and isinstance(_datadict[objectkey], dict):
+            raise ValueToSectionError(
+                f"Cannot overwrite section {objectkey} with a value."
+            )
         _datadict[objectkey] = value
         if save is None:
             save = self._default_save
@@ -101,7 +140,7 @@ class WrapConfig(ABC):
                     target[key] = value
             return target
 
-        self._data = deep_update(self._data, data)
+        deep_update(self._data, data)
 
     def fill(self, data: ConfigData, save: Optional[bool] = None):
         """Deeply update the configuration with the provided data.
@@ -112,27 +151,94 @@ class WrapConfig(ABC):
         def deep_update(target: ConfigData, source: ConfigData) -> None:
             """Helper function to recursively update a dictionary."""
             for key, value in source.items():
-                print(key, value)
                 if isinstance(value, dict):
                     if key not in target:
                         target[key] = {}
                     elif not isinstance(target[key], dict):
-                        raise TypeError(
-                            f"Expected dict, got {type(target[key])}, this might be the result of a key or subkey conflict, which is already a value."
-                        )
+                        continue
                     target[key] = deep_update(target[key], value)
                 else:
                     if key not in target:
                         target[key] = value
             return target
 
-        self._data = deep_update(self._data, data)
+        deep_update(self._data, data)
 
         if save is None:
             save = self._default_save
 
         if save:
             self.save()
+
+    def __setitem__(self, key, value):
+        if key in self._data and isinstance(self._data[key], dict):
+            raise ValueToSectionError(f"Cannot overwrite section {key} with a value.")
+        self._data[key] = value
+
+    def __getitem__(self, key):
+        if key not in self._data:
+            return LazyResult(self, key)
+        if isinstance(self._data[key], dict):
+            return SubConfig(self, key)
+        return self._data[key]
+
+
+class LazyResult:
+    """result of a lazy lookup in a config, if later set the parent config wrapper key will be set as a config,
+    if used as a lookup it will be replaced with a subsection of the parent config"""
+
+    def __init__(self, parent: WrapConfig, key: str) -> None:
+        self._parent = parent
+        self._key = key
+        self._parent[key] = self
+
+    def __setitem__(self, key, value):
+        self._parent[self._key] = {}
+        self._parent[self._key].set(key, value=value)
+
+    def __getitem__(self, key):
+        self._parent[self._key] = {}
+        lazygett = self._parent[self._key][key]
+        return lazygett
+
+    def __repr__(self) -> str:
+        return f"<LazyResult parent={self._parent} key={self._key}>"
+
+
+class SubConfigError(Exception):
+    """Exception raised when trying to call a method on a SubConfig which is not allowed."""
+
+
+class SubConfig(WrapConfig):
+    def __init__(
+        self,
+        parent: WrapConfig,
+        key: str,
+    ) -> None:
+        super().__init__()
+        self._parent = parent
+        self._key = key
+
+    @property
+    def _default_save(self) -> ConfigData:
+        return self._parent._default_save
+
+    @_default_save.setter
+    def _default_save(self, value: ConfigData):
+        pass  # only allow setting of default save on parent
+
+    @property
+    def _data(self) -> ConfigData:
+        return self._parent._data[self._key]
+
+    def load(self):
+        raise SubConfigError("Cannot load a SubConfig.")
+
+    def save(self):
+        self._parent.save()
+
+    def __repr__(self) -> str:
+        return f"<SubConfig key={self._key} parent={self._parent}>"
 
 
 class FileWrapConfig(WrapConfig):
@@ -143,8 +249,6 @@ class FileWrapConfig(WrapConfig):
         super().__init__(default_save)
         if os.path.exists(self.path):
             self.load()
-        if self._data is None:
-            self._data = {}
 
     @property
     def path(self):
