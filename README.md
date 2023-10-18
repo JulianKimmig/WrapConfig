@@ -3,6 +3,7 @@
 A Python package for managing and persisting configurations with flexibility and ease.
 
 [![PyPI Version](https://img.shields.io/pypi/v/WrapConfig)](https://pypi.org/project/WrapConfig/)
+[![Coverage Status](https://coveralls.io/repos/github/JulianKimmig/WrapConfig/badge.svg?branch=main)](https://coveralls.io/github/JulianKimmig/WrapConfig?branch=main)
 [![License](https://img.shields.io/pypi/l/WrapConfig)](https://github.com/your-username/WrapConfig/blob/main/LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/JulianKimmig/WrapConfig)](https://github.com/JulianKimmig/WrapConfig/stargazers)
 
