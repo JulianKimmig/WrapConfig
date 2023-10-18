@@ -1,4 +1,4 @@
-# Your Project Name
+# WrapConfig
 
 A Python package for managing and persisting configurations with flexibility and ease.
 
@@ -32,7 +32,7 @@ pip install WrapConfig
 ## Usage
 
 ```python
-from your_project_name import JSONWrapConfig
+from wrapconfig import JSONWrapConfig
 
 # Create a JSONWrapConfig instance
 config = JSONWrapConfig('config.json')
