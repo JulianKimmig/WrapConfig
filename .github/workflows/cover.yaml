@@ -14,14 +14,13 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
 
-    - name: Checkout code
-        uses: actions/checkout@v2
+        - name: Set up Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: 3.9 # Adjust to your Python version
 
-    - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9 # Adjust to your Python version
-
-    - name: Coveralls
-      uses: coverallsapp/github-action@v2
+        - name: Coveralls
+          uses: coverallsapp/github-action@v2
