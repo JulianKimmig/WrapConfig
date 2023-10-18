@@ -29,7 +29,10 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Run tests
-        run: coverage run & coverage lcov
+        run: |
+          ls -la
+          coverage -m unittest discover -s ./tests -p test_*.py
+          coverage lcov 
 
       - name: Coveralls
         uses: coverallsapp/github-action@v2
