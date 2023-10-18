@@ -21,6 +21,11 @@ class TestWrapConfig(unittest.TestCase):
             self.assertEqual(self.manager._data["key"], "value")
             mock_save.assert_called_once()
 
+        with patch.object(self.manager, "save") as mock_save:
+            self.manager["b"] = "c"
+            self.assertEqual(self.manager._data["b"], "c")
+            mock_save.assert_called_once()
+
     def test_set_withoutvalue(self):
         from wrapconfig import ValueToSectionError
 

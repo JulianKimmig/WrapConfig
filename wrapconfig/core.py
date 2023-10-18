@@ -173,7 +173,7 @@ class WrapConfig(ABC):
     def __setitem__(self, key, value):
         if key in self._data and isinstance(self._data[key], dict):
             raise ValueToSectionError(f"Cannot overwrite section {key} with a value.")
-        self._data[key] = value
+        self.set(key, value=value)
 
     def __getitem__(self, key):
         if key not in self._data:
