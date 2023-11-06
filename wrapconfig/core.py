@@ -186,32 +186,10 @@ class WrapConfig(ABC):
 
     def __getitem__(self, key):
         if key not in self._data:
-            return LazyResult(self, key)
+            self._data[key] = {}
         if isinstance(self._data[key], dict):
             return SubConfig(self, key)
         return self._data[key]
-
-
-class LazyResult:
-    """result of a lazy lookup in a config, if later set the parent config wrapper key will be set as a config,
-    if used as a lookup it will be replaced with a subsection of the parent config"""
-
-    def __init__(self, parent: WrapConfig, key: str) -> None:
-        self._parent = parent
-        self._key = key
-        self._parent[key] = self
-
-    def __setitem__(self, key, value):
-        self._parent[self._key] = {}
-        self._parent[self._key].set(key, value=value)
-
-    def __getitem__(self, key):
-        self._parent[self._key] = {}
-        lazygett = self._parent[self._key][key]
-        return lazygett
-
-    def __repr__(self) -> str:
-        return f"<LazyResult parent={self._parent} key={self._key}>"
 
 
 class SubConfigError(Exception):
