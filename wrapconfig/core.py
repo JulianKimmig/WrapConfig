@@ -96,7 +96,11 @@ class WrapConfig(ABC):
                     f"Expected dict, got {type(_datadict)}, this might be the result of a key or subkey conflict, which is already a value."
                 )
 
-        if objectkey in _datadict and isinstance(_datadict[objectkey], dict):
+        if (
+            objectkey in _datadict
+            and isinstance(_datadict[objectkey], dict)
+            and len(_datadict[objectkey]) > 0
+        ):
             raise ValueToSectionError(
                 f"Cannot overwrite section {objectkey} with a value."
             )
@@ -180,7 +184,11 @@ class WrapConfig(ABC):
             self.save()
 
     def __setitem__(self, key, value):
-        if key in self._data and isinstance(self._data[key], dict):
+        if (
+            key in self._data
+            and isinstance(self._data[key], dict)
+            and len(self._data[key]) > 0
+        ):
             raise ValueToSectionError(f"Cannot overwrite section {key} with a value.")
         self.set(key, value=value)
 

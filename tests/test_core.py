@@ -218,3 +218,12 @@ class TestWrapConfig(unittest.TestCase):
         sub_config = self.manager["key"]
         expected_repr = f"<SubConfig key=key parent={self.manager}>"
         self.assertEqual(repr(sub_config), expected_repr)
+
+    def test_direct_assinment_and_then_set(self):
+        from wrapconfig import ValueToSectionError
+
+        self.manager["level1"]
+        self.manager["level1"] = "value1"
+
+        expected_data = {"level1": "value1"}
+        self.assertEqual(self.manager._data, expected_data)
