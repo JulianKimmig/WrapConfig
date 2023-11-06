@@ -125,7 +125,11 @@ class WrapConfig(ABC):
 
         return _datadict.get(keys[-1], default)
 
-    def update(self, data: ConfigData):
+    def update(
+        self,
+        data: ConfigData,
+        save: Optional[bool] = None,
+    ):
         """Deeply update the configuration with the provided data.
         If a key is not present in the configuration, it will be added.
         If a key is present in the configuration, it will be updated.
@@ -141,6 +145,11 @@ class WrapConfig(ABC):
             return target
 
         deep_update(self._data, data)
+        if save is None:
+            save = self._default_save
+
+        if save:
+            self.save()
 
     def fill(self, data: ConfigData, save: Optional[bool] = None):
         """Deeply update the configuration with the provided data.
@@ -245,7 +254,7 @@ class FileWrapConfig(WrapConfig):
     """WrapConfig that saves and loads from a file"""
 
     def __init__(self, path, default_save: bool = True) -> None:
-        self._path = path
+        self._path = os.path.abspath(path)
         super().__init__(default_save)
         if os.path.exists(self.path):
             self.load()

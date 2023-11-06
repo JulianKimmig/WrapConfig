@@ -28,5 +28,5 @@ class JSONWrapConfig(FileWrapConfig):
             os.makedirs(os.path.dirname(self.path), exist_ok=True)
 
         dump = json.dumps(self._data, indent=4, cls=self._encoder)
-        with open(self.path, "w") as f:
+        with open(self.path, "w+") as f:
             f.write(dump)

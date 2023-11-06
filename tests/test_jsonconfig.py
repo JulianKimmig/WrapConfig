@@ -30,8 +30,7 @@ class TestJSONWrapConfig(unittest.TestCase):
             manager = JSONWrapConfig(self.dummy_path)
             manager.set_data(self.data)
             manager.save()
-
-            written_data = "".join(call[0][0] for call in m().write.call_args_list)
+            written_data = "".join(m().write.call_args_list[-1][0])
 
             self.assertEqual(json.dumps(self.data, indent=4), written_data)
 

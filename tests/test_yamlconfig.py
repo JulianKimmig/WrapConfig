@@ -33,7 +33,7 @@ class TestYAMLWrapConfig(unittest.TestCase):
             manager.set_data(self.data)
             manager.save()
 
-            written_data = "".join(call[0][0] for call in m().write.call_args_list)
+            written_data = "".join(m().write.call_args_list[-1][0])
 
             self.assertEqual(
                 yaml.dump(self.data, default_flow_style=False), written_data

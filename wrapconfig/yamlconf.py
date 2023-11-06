@@ -10,7 +10,7 @@ class YAMLWrapConfig(FileWrapConfig):
             os.makedirs(os.path.dirname(self.path), exist_ok=True)
 
         dump = yaml.dump(self._data)
-        with open(self.path, "w") as f:
+        with open(self.path, "w+") as f:
             f.write(dump)
 
     def load(self):
