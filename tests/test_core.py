@@ -227,3 +227,12 @@ class TestWrapConfig(unittest.TestCase):
 
         expected_data = {"level1": "value1"}
         self.assertEqual(self.manager._data, expected_data)
+
+    def test_iter(self):
+        from wrapconfig import WrapConfig
+
+        self.manager.set_data({"key": {"subkey": "value"}, "v": 1})
+        d = dict(**self.manager)
+        assert isinstance(d["key"], WrapConfig)
+        assert d["v"] == 1
+        assert d["key"]["subkey"] == "value"

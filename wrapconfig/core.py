@@ -199,6 +199,21 @@ class WrapConfig(ABC):
             return SubConfig(self, key)
         return self._data[key]
 
+    def __iter__(self):
+        return iter(self._data)
+
+    def __len__(self):
+        return len(self._data)
+
+    def items(self):
+        return self._data.items()
+
+    def keys(self):
+        return self._data.keys()
+
+    def values(self):
+        return self._data.values()
+
 
 class SubConfigError(Exception):
     """Exception raised when trying to call a method on a SubConfig which is not allowed."""
