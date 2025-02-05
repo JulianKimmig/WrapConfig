@@ -1,0 +1,50 @@
+[project]
+name = "WrapConfig"
+version = "0.2.0"
+description = "Wraper to manage configurations"
+authors = [{name = "Julian Kimmig", email = "julian.kimmig@linkdlab.de"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+toml = [
+    "toml>=0.10.2",
+]
+yaml = [
+    "pyyaml>=6.0.2",
+]
+
+
+[dependency-groups]
+dev = [
+    "coverage>=7.6.10",
+    "wrapconfig[toml]",
+    "wrapconfig[yaml]",
+]
+toml = [
+    "wrapconfig[toml]",
+]
+yaml = [
+    "wrapconfig[yaml]",
+]
+all = [
+    "wrapconfig[toml]",
+    "wrapconfig[yaml]",
+]
+
+[tool.uv.sources]
+wrapconfig = { workspace = true }
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+homepage  = "https://github.com/JulianKimmig/WrapConfig"
+source  = "https://github.com/JulianKimmig/WrapConfig"
+tracker  = "https://github.com/JulianKimmig/WrapConfig/issues"
+
+
+
+
+

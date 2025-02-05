@@ -25,7 +25,7 @@ class ExpectingSectionError(Exception):
 
 class WrapConfig(ABC):
     """
-    Base class for configuration wrappers.
+    Abstract base class for configuration wrappers.
 
     Provides methods to set, get, update, fill, and clear configuration data.
     Subclasses must implement load() and save() to handle persistence.
@@ -33,7 +33,7 @@ class WrapConfig(ABC):
 
     def __init__(self, default_save: bool = True) -> None:
         self._config_data: ConfigData = {}
-        self._default_save = default_save
+        self._default_save: bool = default_save
 
     @property
     def data(self) -> ConfigData:
@@ -42,20 +42,32 @@ class WrapConfig(ABC):
 
     @property
     def _data(self) -> ConfigData:
+        """Internal access to the configuration data.
+        This is used by subclasses to access the configuration data directly.
+        """
         return self._config_data
 
-    def set_data(self, data: ConfigData):
+    def set_data(self, data: ConfigData) -> None:
+        """
+        Replace the entire configuration with the provided data.
+        """
         self.clear()
         self.update(data)
 
     @abstractmethod
     def load(self) -> None:
-        """Load configuration from its resource."""
+        """
+        Load configuration from its resource.
+        Must be implemented by subclasses.
+        """
         pass
 
     @abstractmethod
     def save(self) -> None:
-        """Save configuration to its resource."""
+        """
+        Save configuration to its resource.
+        Must be implemented by subclasses.
+        """
         pass
 
     def clear(self, *keys):
@@ -122,8 +134,11 @@ class WrapConfig(ABC):
         if save:
             self.save()
 
-    def get(self, *keys: str, default: ConfigTypes = None) -> Any:
-        """get config value recursively with default value"""
+    def get(self, *keys: str, default: Any = None) -> Any:
+        """
+        Retrieve a configuration value using a nested key path.
+        Returns the provided default if the key path is not found.
+        """
         if not keys:
             return self.data
 
@@ -150,11 +165,11 @@ class WrapConfig(ABC):
         If a key is present in the configuration, it will be updated.
         """
 
-        def deep_update(target: ConfigData, source: ConfigData) -> None:
-            """Helper function to recursively update a dictionary."""
+        def deep_update(target: ConfigData, source: ConfigData) -> ConfigData:
             for key, value in source.items():
-                if isinstance(value, dict):
-                    target[key] = deep_update(target.get(key, {}), value)
+                tv = target.get(key, {})
+                if isinstance(value, dict) and isinstance(tv, dict):
+                    target[key] = deep_update(tv, value)
                 else:
                     target[key] = value
             return target
@@ -172,8 +187,7 @@ class WrapConfig(ABC):
         If a key is present in the configuration, it will not be updated.
         """
 
-        def deep_update(target: ConfigData, source: ConfigData) -> None:
-            """Helper function to recursively update a dictionary."""
+        def deep_update(target: ConfigData, source: ConfigData) -> ConfigData:
             for key, value in source.items():
                 if isinstance(value, dict):
                     if key not in target:
@@ -244,11 +258,11 @@ class SubConfig(WrapConfig):
         self._key = key
 
     @property
-    def _default_save(self) -> ConfigData:
+    def _default_save(self) -> bool:
         return self._parent._default_save
 
     @_default_save.setter
-    def _default_save(self, value: ConfigData):
+    def _default_save(self, value_: bool):
         pass  # only allow setting of default save on parent
 
     @property
