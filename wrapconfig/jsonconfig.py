@@ -1,12 +1,19 @@
-from __future__ import annotations
-from typing import Type, Optional
-from .core import FileWrapConfig
+"""
+JSON file–based configuration implementation.
+"""
 
+from __future__ import annotations
 import json
 import os
+from typing import Optional, Type
+from .core import FileWrapConfig
 
 
 class JSONWrapConfig(FileWrapConfig):
+    """
+    A JSON-based configuration wrapper that reads from and writes to a JSON file.
+    """
+
     def __init__(
         self,
         path: str,
@@ -16,17 +23,17 @@ class JSONWrapConfig(FileWrapConfig):
     ) -> None:
         self._encoder = encoder
         self._decoder = decoder
-
         super().__init__(path=path, default_save=default_save)
 
-    def load(self):
-        with open(self.path, "r") as f:
-            self.set_data(json.load(f, cls=self._decoder))
+    def load(self) -> None:
+        """Load configuration data from the JSON file."""
+        with open(self.path, "r", encoding="utf-8") as f:
+            data = json.load(f, cls=self._decoder)
+            self.set_data(data)
 
-    def save(self):
-        if not os.path.exists(self.path):
-            os.makedirs(os.path.dirname(self.path), exist_ok=True)
-
+    def save(self) -> None:
+        """Save the current configuration to the JSON file."""
+        os.makedirs(os.path.dirname(self.path), exist_ok=True)
         dump = json.dumps(self._data, indent=4, cls=self._encoder)
-        with open(self.path, "w+") as f:
+        with open(self.path, "w", encoding="utf-8") as f:
             f.write(dump)

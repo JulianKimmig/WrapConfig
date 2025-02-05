@@ -1,18 +1,26 @@
-from typing import Optional, Type
+"""
+YAML file–based configuration implementation.
+"""
+
 import os
-from .core import FileWrapConfig
 import yaml
+from .core import FileWrapConfig
 
 
 class YAMLWrapConfig(FileWrapConfig):
-    def save(self):
-        if not os.path.exists(os.path.dirname(self.path)):
-            os.makedirs(os.path.dirname(self.path), exist_ok=True)
+    """
+    A YAML-based configuration wrapper that reads from and writes to a YAML file.
+    """
 
+    def save(self) -> None:
+        """Save the current configuration to a YAML file."""
+        os.makedirs(os.path.dirname(self.path), exist_ok=True)
         dump = yaml.dump(self._data)
-        with open(self.path, "w+") as f:
+        with open(self.path, "w", encoding="utf-8") as f:
             f.write(dump)
 
-    def load(self):
-        with open(self.path, "r") as f:
-            self.set_data(yaml.safe_load(f))
+    def load(self) -> None:
+        """Load configuration data from the YAML file."""
+        with open(self.path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+            self.set_data(data)

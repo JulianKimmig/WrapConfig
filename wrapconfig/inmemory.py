@@ -1,13 +1,25 @@
-from .core import WrapConfig
+"""
+In-memory configuration implementation.
+"""
+
+from .core import WrapConfig, ConfigData
 
 
 class InMemoryConfig(WrapConfig):
-    def __init__(self, *args, **kwargs) -> None:
-        self._backup = {}
-        super().__init__(*args, **kwargs)
+    """
+    An in-memory configuration that does not persist to disk.
 
-    def save(self):
+    The configuration is backed up internally to simulate saving and loading.
+    """
+
+    def __init__(self, default_save: bool = True) -> None:
+        super().__init__(default_save=default_save)
+        self._backup: ConfigData = {}
+
+    def save(self) -> None:
+        """Simulate saving by storing a backup of the current configuration."""
         self._backup = self.data
 
-    def load(self):
+    def load(self) -> None:
+        """Restore configuration from the in-memory backup."""
         self.set_data(self._backup)
