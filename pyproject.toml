@@ -20,22 +20,22 @@ yaml = [
 dev = [
     "coverage>=7.6.10",
     "pytest>=8.3.4",
-    "wrapconfig[toml]",
-    "wrapconfig[yaml]",
+    "WrapConfig[toml]",
+    "WrapConfig[yaml]",
 ]
 toml = [
-    "wrapconfig[toml]",
+    "WrapConfig[toml]",
 ]
 yaml = [
-    "wrapconfig[yaml]",
+    "WrapConfig[yaml]",
 ]
 all = [
-    "wrapconfig[toml]",
-    "wrapconfig[yaml]",
+    "WrapConfig[toml]",
+    "WrapConfig[yaml]",
 ]
 
 [tool.uv.sources]
-wrapconfig = { workspace = true }
+WrapConfig = { workspace = true }
 
 [project.license]
 text = "MIT"
