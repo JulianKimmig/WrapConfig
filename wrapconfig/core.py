@@ -1,14 +1,17 @@
+"""
+Core configuration classes and exceptions.
+"""
+
 from abc import ABC, abstractmethod
-from typing import Any, Union, Optional, Dict
 from copy import deepcopy
 import os
+from typing import Any, Dict, Optional, Union
 
+# Type definitions
 ConfigTypes = Union[str, float, int, bool]
-
-
 ConfigData = Dict[str, Union[ConfigTypes, "ConfigData"]]
 
-nonetype = object()
+_NO_VALUE = object()
 
 
 class ValueToSectionError(Exception):
@@ -72,14 +75,14 @@ class WrapConfig(ABC):
     def set(
         self,
         *keys: str,
-        value: ConfigTypes = nonetype,
+        value: ConfigTypes = _NO_VALUE,
         save: Optional[bool] = None,
     ):
         """set config"""
 
         keys = list(keys)
 
-        if value is nonetype:
+        if value is _NO_VALUE:
             value = keys.pop(-1)
         if len(keys) == 0:
             raise ValueError("No keys provided")
