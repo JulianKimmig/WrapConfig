@@ -1,6 +1,6 @@
 [project]
 name = "WrapConfig"
-version = "0.2.1"
+version = "0.2.2"
 description = "Wraper to manage configurations"
 authors = [{name = "Julian Kimmig", email = "julian.kimmig@linkdlab.de"}]
 readme = "README.md"
