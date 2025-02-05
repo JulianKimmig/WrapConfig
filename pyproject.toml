@@ -34,8 +34,11 @@ all = [
     "WrapConfig[yaml]",
 ]
 
-[tool.uv.sources]
-WrapConfig = { workspace = true }
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [project.license]
 text = "MIT"
@@ -44,6 +47,10 @@ text = "MIT"
 homepage  = "https://github.com/JulianKimmig/WrapConfig"
 source  = "https://github.com/JulianKimmig/WrapConfig"
 tracker  = "https://github.com/JulianKimmig/WrapConfig/issues"
+
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
 
 
 
