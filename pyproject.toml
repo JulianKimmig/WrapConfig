@@ -19,6 +19,7 @@ yaml = [
 [dependency-groups]
 dev = [
     "coverage>=7.6.10",
+    "pytest>=8.3.4",
     "wrapconfig[toml]",
     "wrapconfig[yaml]",
 ]
