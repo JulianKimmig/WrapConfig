@@ -11,6 +11,7 @@ from typing import Any, Dict, Optional, Union
 ConfigTypes = Union[str, float, int, bool]
 ConfigData = Dict[str, Union[ConfigTypes, "ConfigData"]]
 
+# Sentinel value used to detect an omitted value.
 _NO_VALUE = object()
 
 
@@ -31,12 +32,12 @@ class WrapConfig(ABC):
     """
 
     def __init__(self, default_save: bool = True) -> None:
-        super().__init__()
         self._config_data: ConfigData = {}
         self._default_save = default_save
 
     @property
     def data(self) -> ConfigData:
+        """Return a deep copy of the configuration data."""
         return deepcopy(self._data)
 
     @property
@@ -48,14 +49,14 @@ class WrapConfig(ABC):
         self.update(data)
 
     @abstractmethod
-    def load(self):
-        """load config from resource"""
-        ...
+    def load(self) -> None:
+        """Load configuration from its resource."""
+        pass
 
     @abstractmethod
-    def save(self):
-        """save config to resource"""
-        ...
+    def save(self) -> None:
+        """Save configuration to its resource."""
+        pass
 
     def clear(self, *keys):
         """clear config"""
@@ -226,15 +227,18 @@ class WrapConfig(ABC):
 
 
 class SubConfigError(Exception):
-    """Exception raised when trying to call a method on a SubConfig which is not allowed."""
+    """Raised for operations that are not allowed on a SubConfig."""
 
 
 class SubConfig(WrapConfig):
-    def __init__(
-        self,
-        parent: WrapConfig,
-        key: str,
-    ) -> None:
+    """
+    Represents a subsection of a parent configuration.
+
+    The SubConfig delegates saving to the parent configuration.
+    It does not support direct loading.
+    """
+
+    def __init__(self, parent: WrapConfig, key: str) -> None:
         super().__init__()
         self._parent = parent
         self._key = key
