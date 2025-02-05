@@ -35,5 +35,4 @@ class JSONWrapConfig(FileWrapConfig):
         """Save the current configuration to the JSON file."""
         os.makedirs(os.path.dirname(self.path), exist_ok=True)
         dump = json.dumps(self._data, indent=4, cls=self._encoder)
-        with open(self.path, "w", encoding="utf-8") as f:
-            f.write(dump)
+        self._write_file(dump)

@@ -25,5 +25,4 @@ class TOMLWrapConfig(FileWrapConfig):
         """Save the current configuration to the TOML file."""
         os.makedirs(os.path.dirname(self.path), exist_ok=True)
         dump = toml.dumps(self._data)
-        with open(self.path, "w", encoding="utf-8") as f:
-            f.write(dump)
+        self._write_file(dump)

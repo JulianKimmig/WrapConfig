@@ -24,19 +24,18 @@ class TestTOMLWrapConfig(unittest.TestCase):
     def test_save_file(self):
         from wrapconfig import TOMLWrapConfig
 
-        m = mock_open()
         with (
-            patch("builtins.open", m),
-            patch("os.path.exists", return_value=False),
-            patch("os.makedirs"),
+            patch.object(TOMLWrapConfig, "_write_file") as mocked_write_file,
+            patch("os.makedirs") as mocked_makedirs,
         ):
             manager = TOMLWrapConfig(self.dummy_path, default_save=False)
             manager.set_data(self.data)
             manager.save()
-            # Get the written data from the mock
-            written_calls = m().write.call_args_list
-            written_data = "".join(call_arg[0][0] for call_arg in written_calls)
-            self.assertEqual(toml.dumps(self.data), written_data)
+
+            # We expect TOML dump to be created with default_flow_style=False.
+            expected_dump = toml.dumps(self.data)
+           
+            mocked_write_file.assert_called_once_with(expected_dump)
 
 
 if __name__ == "__main__":

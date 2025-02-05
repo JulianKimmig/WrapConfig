@@ -216,8 +216,8 @@ wheels = [
 
 [[package]]
 name = "wrapconfig"
-version = "0.2.0"
-source = { virtual = "." }
+version = "0.2.1"
+source = { editable = "." }
 
 [package.optional-dependencies]
 toml = [
@@ -251,14 +251,14 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 all = [
-    { name = "wrapconfig", extras = ["toml"], virtual = "." },
-    { name = "wrapconfig", extras = ["yaml"], virtual = "." },
+    { name = "wrapconfig", extras = ["toml"] },
+    { name = "wrapconfig", extras = ["yaml"] },
 ]
 dev = [
     { name = "coverage", specifier = ">=7.6.10" },
     { name = "pytest", specifier = ">=8.3.4" },
-    { name = "wrapconfig", extras = ["toml"], virtual = "." },
-    { name = "wrapconfig", extras = ["yaml"], virtual = "." },
+    { name = "wrapconfig", extras = ["toml"] },
+    { name = "wrapconfig", extras = ["yaml"] },
 ]
-toml = [{ name = "wrapconfig", extras = ["toml"], virtual = "." }]
-yaml = [{ name = "wrapconfig", extras = ["yaml"], virtual = "." }]
+toml = [{ name = "wrapconfig", extras = ["toml"] }]
+yaml = [{ name = "wrapconfig", extras = ["yaml"] }]

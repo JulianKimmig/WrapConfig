@@ -24,20 +24,20 @@ class TestYAMLWrapConfig(unittest.TestCase):
     def test_save_file(self):
         from wrapconfig import YAMLWrapConfig
 
-        # Mock the open method and os methods
-        m = mock_open()
-        with patch("builtins.open", m), patch(
-            "os.path.exists", return_value=False
-        ), patch("os.makedirs"):
-            manager = YAMLWrapConfig(self.dummy_path)
+        with (
+            patch.object(YAMLWrapConfig, "_write_file") as mocked_write_file,
+            patch("os.makedirs") as mocked_makedirs,
+        ):
+            manager = YAMLWrapConfig(self.dummy_path, default_save=False)
             manager.set_data(self.data)
             manager.save()
 
-            written_data = "".join(m().write.call_args_list[-1][0])
+            # We expect YAML dump to be created with default_flow_style=False.
+            expected_dump = yaml.dump(self.data, default_flow_style=False)
+            # Note: if your production code uses a different call signature (e.g. without default_flow_style),
+            # update expected_dump accordingly.
 
-            self.assertEqual(
-                yaml.dump(self.data, default_flow_style=False), written_data
-            )  # Use yaml.dump() with default_flow_style=False for readability
+            mocked_write_file.assert_called_once_with(expected_dump)
 
     def test_save_file_existing_dir(self):
         from wrapconfig import YAMLWrapConfig
