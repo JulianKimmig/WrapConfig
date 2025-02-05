@@ -1,8 +1,10 @@
 from .jsonconfig import JSONWrapConfig
 from .core import WrapConfig, FileWrapConfig, ValueToSectionError, ExpectingSectionError
 from .inmemory import InMemoryConfig
+from ._read import create_config
 
 __all__ = [
+    "create_config",
     "JSONWrapConfig",
     "WrapConfig",
     "InMemoryConfig",
@@ -27,4 +29,4 @@ try:
 except (ImportError, ModuleNotFoundError):
     pass
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"

@@ -27,9 +27,7 @@ class JSONWrapConfig(FileWrapConfig):
 
     def load(self) -> None:
         """Load configuration data from the JSON file."""
-        with open(self.path, "r", encoding="utf-8") as f:
-            data = json.load(f, cls=self._decoder)
-            self.set_data(data)
+        self.set_data(json.loads(self._read_file(), cls=self._decoder))
 
     def save(self) -> None:
         """Save the current configuration to the JSON file."""

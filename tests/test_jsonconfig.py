@@ -34,7 +34,6 @@ class TestJSONWrapConfig(unittest.TestCase):
             expected_dump = json.dumps(self.data, indent=4)
 
             mocked_write_file.assert_called_once_with(expected_dump)
-      
 
     def test_save_file_existing_dir(self):
         from wrapconfig import JSONWrapConfig
