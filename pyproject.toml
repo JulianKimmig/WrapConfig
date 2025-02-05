@@ -19,22 +19,26 @@ yaml = [
 [dependency-groups]
 dev = [
     "coverage>=7.6.10",
-    "wrapconfig[toml]",
-    "wrapconfig[yaml]",
+    "pytest>=8.3.4",
+    "WrapConfig[toml]",
+    "WrapConfig[yaml]",
 ]
 toml = [
-    "wrapconfig[toml]",
+    "WrapConfig[toml]",
 ]
 yaml = [
-    "wrapconfig[yaml]",
+    "WrapConfig[yaml]",
 ]
 all = [
-    "wrapconfig[toml]",
-    "wrapconfig[yaml]",
+    "WrapConfig[toml]",
+    "WrapConfig[yaml]",
 ]
 
-[tool.uv.sources]
-wrapconfig = { workspace = true }
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [project.license]
 text = "MIT"
@@ -43,6 +47,10 @@ text = "MIT"
 homepage  = "https://github.com/JulianKimmig/WrapConfig"
 source  = "https://github.com/JulianKimmig/WrapConfig"
 tracker  = "https://github.com/JulianKimmig/WrapConfig/issues"
+
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
 
 
 
