@@ -16,8 +16,7 @@ class YAMLWrapConfig(FileWrapConfig):
         """Save the current configuration to a YAML file."""
         os.makedirs(os.path.dirname(self.path), exist_ok=True)
         dump = yaml.dump(self._data)
-        with open(self.path, "w", encoding="utf-8") as f:
-            f.write(dump)
+        self._write_file(dump)
 
     def load(self) -> None:
         """Load configuration data from the YAML file."""

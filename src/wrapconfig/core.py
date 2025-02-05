@@ -6,6 +6,10 @@ from abc import ABC, abstractmethod
 from copy import deepcopy
 import os
 from typing import Any, Dict, Optional, Union
+import tempfile
+import logging
+
+logger = logging.getLogger("wrapconfig")
 
 # Type definitions
 ConfigTypes = Union[str, float, int, bool]
@@ -287,6 +291,55 @@ class FileWrapConfig(WrapConfig):
         super().__init__(default_save)
         if os.path.exists(self.path):
             self.load()
+
+    def _write_file(self, dump: str) -> None:
+        """
+        Atomically write the provided data to the file specified by self.path.
+
+        This method writes the content to a temporary file located in the same
+        directory as self.path. It then flushes, fsyncs, and atomically replaces
+        the target file with the temporary file using os.replace. This ensures that
+        the file is either fully written or not modified at all, thus preventing
+        corruption.
+
+        Parameters:
+            dump (str): The string data to be written to the file.
+
+        Raises:
+            Exception: Re-raises any exception that occurs during the write process.
+        """
+
+        # Ensure the temporary file is created in the same directory as the target file.
+        target_dir = os.path.dirname(os.path.abspath(self.path))
+        temp_file_path = None
+
+        try:
+            # Create a temporary file in the target directory.
+            with tempfile.NamedTemporaryFile(
+                mode="w", delete=False, encoding="utf-8", dir=target_dir
+            ) as tmp_file:
+                temp_file_path = tmp_file.name
+                tmp_file.write(dump)
+                # Ensure data is flushed to disk.
+                tmp_file.flush()
+                os.fsync(tmp_file.fileno())
+
+            # Atomically replace the destination file with the temporary file.
+            os.replace(temp_file_path, self.path)
+
+        except Exception as error:
+            logger.exception("Error writing file atomically to %s", self.path)
+            # Clean up the temporary file if it exists.
+            if temp_file_path and os.path.exists(temp_file_path):
+                try:
+                    os.remove(temp_file_path)
+                except Exception as cleanup_error:
+                    logger.warning(
+                        "Failed to remove temporary file %s: %s",
+                        temp_file_path,
+                        cleanup_error,
+                    )
+            raise error
 
     @property
     def path(self):
