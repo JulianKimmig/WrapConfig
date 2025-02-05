@@ -292,6 +292,10 @@ class FileWrapConfig(WrapConfig):
         if os.path.exists(self.path):
             self.load()
 
+    def _read_file(self) -> str:
+        with open(self.path, "r", encoding="utf-8") as f:
+            return f.read()
+
     def _write_file(self, dump: str) -> None:
         """
         Atomically write the provided data to the file specified by self.path.

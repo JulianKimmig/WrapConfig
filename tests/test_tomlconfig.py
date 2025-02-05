@@ -34,7 +34,7 @@ class TestTOMLWrapConfig(unittest.TestCase):
 
             # We expect TOML dump to be created with default_flow_style=False.
             expected_dump = toml.dumps(self.data)
-           
+
             mocked_write_file.assert_called_once_with(expected_dump)
 
 

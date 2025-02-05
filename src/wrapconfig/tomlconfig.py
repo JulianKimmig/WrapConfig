@@ -17,9 +17,7 @@ class TOMLWrapConfig(FileWrapConfig):
 
     def load(self) -> None:
         """Load configuration data from the TOML file."""
-        with open(self.path, "r", encoding="utf-8") as f:
-            data = toml.load(f)
-            self.set_data(data)
+        self.set_data(toml.loads(self._read_file()))
 
     def save(self) -> None:
         """Save the current configuration to the TOML file."""

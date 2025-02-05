@@ -45,7 +45,8 @@ class TestYAMLWrapConfig(unittest.TestCase):
         # Mock the open method and os methods
         m = mock_open(read_data=yaml.dump(self.data))
         with patch("builtins.open", m), patch(
-            "os.path.exists", return_value=True  # Mock to return True
+            "os.path.exists",
+            return_value=True,  # Mock to return True
         ), patch(
             "os.makedirs",
         ) as mock_makedirs:

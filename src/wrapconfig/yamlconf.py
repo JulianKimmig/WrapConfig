@@ -20,6 +20,4 @@ class YAMLWrapConfig(FileWrapConfig):
 
     def load(self) -> None:
         """Load configuration data from the YAML file."""
-        with open(self.path, "r", encoding="utf-8") as f:
-            data = yaml.safe_load(f)
-            self.set_data(data)
+        self.set_data(yaml.safe_load(self._read_file()))
