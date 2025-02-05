@@ -15,14 +15,21 @@ _NO_VALUE = object()
 
 
 class ValueToSectionError(Exception):
-    """Exception raised when trying to overwrite a section with a value."""
+    """Raised when attempting to overwrite a configuration section (dict) with a non-dict value."""
 
 
 class ExpectingSectionError(Exception):
-    """Exception raised expectin a section, but got something else."""
+    """Raised when a nested section was expected but a non-dict value was found instead."""
 
 
 class WrapConfig(ABC):
+    """
+    Base class for configuration wrappers.
+
+    Provides methods to set, get, update, fill, and clear configuration data.
+    Subclasses must implement load() and save() to handle persistence.
+    """
+
     def __init__(self, default_save: bool = True) -> None:
         super().__init__()
         self._truedata: ConfigData = {}
