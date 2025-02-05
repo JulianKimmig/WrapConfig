@@ -32,7 +32,7 @@ class WrapConfig(ABC):
 
     def __init__(self, default_save: bool = True) -> None:
         super().__init__()
-        self._truedata: ConfigData = {}
+        self._config_data: ConfigData = {}
         self._default_save = default_save
 
     @property
@@ -41,7 +41,7 @@ class WrapConfig(ABC):
 
     @property
     def _data(self) -> ConfigData:
-        return self._truedata
+        return self._config_data
 
     def set_data(self, data: ConfigData):
         self.clear()
